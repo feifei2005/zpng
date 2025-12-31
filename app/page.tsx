@@ -58,7 +58,7 @@ export default function Home() {
       );
 
       // 调用压缩 API
-      const response = await fetch('/compress', {
+      const response = await fetch('/api/compress', {
         method: 'POST',
         body: formData,
       });
