@@ -158,7 +158,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-600 dark:border-gray-800 dark:text-gray-400">
           {/* 第一行：版权信息 + 隐私说明 */}
-          <p>© 2024 B站直播间表情压缩工具 | 所有处理均在本地完成，保护您的隐私</p>
+          <p>© 2026 B站直播间表情压缩工具 | 所有处理均在本地完成，保护您的隐私</p>
           
           {/* 第二行：GitHub Star 引导 */}
           <div className="mt-4 flex items-center justify-center gap-2">
