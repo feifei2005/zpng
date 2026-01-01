@@ -5,6 +5,7 @@ import { Dropzone } from './components/dropzone';
 import { ProcessingList } from './components/processing-list';
 import { ImageItem } from '@/types';
 import { Sparkles } from 'lucide-react';
+import { compressImage } from './lib/compress';
 
 export default function Home() {
   const [images, setImages] = useState<ImageItem[]>([]);
@@ -27,18 +28,7 @@ export default function Home() {
     }
   }, []);
 
-  // Base64 转 Blob 的辅助函数
-  const base64ToBlob = (base64: string, mimeType: string = 'image/png'): Blob => {
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    return new Blob([byteArray], { type: mimeType });
-  };
-
-  // 图片处理函数 - 调用真实的压缩 API
+  // 图片处理函数 - 使用客户端 UPNG.js 压缩
   const processImage = async (id: string, file: File) => {
     // 设置为处理中状态
     setImages((prev) =>
@@ -48,45 +38,12 @@ export default function Home() {
     );
 
     try {
-      // 创建 FormData 对象
-      const formData = new FormData();
-      formData.append('file', file);
-
-      // 更新进度
-      setImages((prev) =>
-        prev.map((img) => (img.id === id ? { ...img, progress: 30 } : img))
-      );
-
-      // 调用压缩 API
-      const response = await fetch('/api/compress', {
-        method: 'POST',
-        body: formData,
+      // 使用客户端压缩函数
+      const result = await compressImage(file, (progress) => {
+        setImages((prev) =>
+          prev.map((img) => (img.id === id ? { ...img, progress } : img))
+        );
       });
-
-      // 更新进度
-      setImages((prev) =>
-        prev.map((img) => (img.id === id ? { ...img, progress: 70 } : img))
-      );
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || '压缩失败');
-      }
-
-      // 更新进度
-      setImages((prev) =>
-        prev.map((img) => (img.id === id ? { ...img, progress: 90 } : img))
-      );
-
-      // 处理返回的数据
-      const { base64, compressedSize } = result.data;
-      
-      // 添加 data URI 前缀
-      const compressedPreview = `data:image/png;base64,${base64}`;
-      
-      // 将 base64 转换为 Blob 以便下载
-      const compressedBlob = base64ToBlob(base64);
 
       // 更新状态为成功
       setImages((prev) =>
@@ -95,9 +52,9 @@ export default function Home() {
             ? {
                 ...img,
                 status: 'success' as const,
-                compressedPreview,
-                compressedSize,
-                compressedBlob,
+                compressedPreview: result.dataUrl,
+                compressedSize: result.size,
+                compressedBlob: result.blob,
                 progress: 100,
               }
             : img
