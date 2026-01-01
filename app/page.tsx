@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { Dropzone } from './components/dropzone';
 import { ProcessingList } from './components/processing-list';
 import { ImageItem } from '@/types';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Github, Star } from 'lucide-react';
 import { compressImage } from './lib/compress';
 
 export default function Home() {
@@ -157,7 +157,43 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-600 dark:border-gray-800 dark:text-gray-400">
+          {/* 第一行：版权信息 + 隐私说明 */}
           <p>© 2024 B站直播间表情压缩工具 | 所有处理均在本地完成，保护您的隐私</p>
+          
+          {/* 第二行：GitHub Star 引导 */}
+          <div className="mt-4 flex items-center justify-center gap-2">
+            <a
+              href="https://github.com/feifei2005/zpng"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-4 py-1.5 text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            >
+              <Github className="h-4 w-4" />
+              <span>如果觉得好用，欢迎给个</span>
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            </a>
+          </div>
+          
+          {/* 第三行：Powered by EdgeOne + ICP 备案号 */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-gray-500">Powered by</span>
+              <img
+                src="https://edgeone.cloud.tencent.com/_next/static/media/headLogo.daeb48ad.png"
+                alt="Tencent EdgeOne"
+                className="h-6"
+              />
+            </div>
+            <span className="hidden text-gray-300 dark:text-gray-600 sm:inline">|</span>
+            <a
+              href="https://beian.miit.gov.cn/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 transition-colors hover:text-gray-700 dark:hover:text-gray-300"
+            >
+              桂ICP备2024047917号-1
+            </a>
+          </div>
         </footer>
       </div>
     </main>
